@@ -1,0 +1,85 @@
+org: alessandromonzon
+service: api-usuarios
+
+provider:
+  name: aws
+  runtime: python3.9
+  memorySize: 1024
+  timeout: 20
+  iam:
+    role: arn:aws:iam::251147550179:role/LabRole
+  environment:
+    DYNAMODB_TABLE_T_USERS: t-usuarios
+    DYNAMODB_TABLE_T_TOKENS: t-tokens
+
+functions:
+
+  # ======================
+  # User management
+  # ======================
+  registerUser:
+    handler: register_user.register_user
+    events:
+      - http:
+          path: /users/register
+          method: post
+          cors: true
+
+  loginUser:
+    handler: login_user.login_user
+    events:
+      - http:
+          path: /users/login
+          method: post
+          cors: true
+
+  validateToken:
+    handler: validate_token.validate_token
+    events:
+      - http:
+          path: /users/validate-token
+          method: get
+          cors: true
+
+  getUserProfile:
+    handler: ver_perfil.get_user_profile
+    events:
+      - http:
+          path: /users/profile
+          method: get
+          cors: true
+
+  updateUser:
+    handler: actualizar_datos.update_user
+    events:
+      - http:
+          path: /users/profile
+          method: put
+          cors: true
+
+  changePassword:
+    handler: cambiar_contrasena.change_password
+    events:
+      - http:
+          path: /users/password
+          method: put
+          cors: true
+
+  # ======================
+  # Favorites management
+  # ======================
+  getFavorites:
+    handler: ver_favoritos.get_favoritos
+    events:
+      - http:
+          path: /users/favorites
+          method: get
+          cors: true
+
+  addFavorite:
+    handler: agregar_favoritos.add_favorito
+    events:
+      - http:
+          path: /users/favorites
+          method: post
+          cors: true
